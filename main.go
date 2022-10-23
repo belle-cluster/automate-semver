@@ -1,28 +1,28 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
+	"regexp"
 
 	"github.com/sirupsen/logrus"
 )
 
-func Exec(cmd string, shell bool) (string, error) {
+func Exec(cmd string, shell bool) ([]byte, error) {
 
 	if shell {
 		out, err := exec.Command("bash", "-c", cmd).Output()
-		outStr := string(out)
 		if err != nil {
-			return outStr, err
+			return out, err
 		}
-		return outStr, nil
+		return out, nil
 	} else {
 		out, err := exec.Command(cmd).Output()
-		outStr := string(out)
 		if err != nil {
-			return outStr, err
+			return out, err
 		}
-		return outStr, nil
+		return out, nil
 	}
 }
 
@@ -38,10 +38,39 @@ func main() {
 		return
 	}
 	logrus.Debug(latestTag)
-	if latestTag == "" {
+	if len(latestTag) == 0 {
 		logrus.Warn("No latest tag was found.")
 	}
 
-	// Start determining sember.
+	// Start determining semver.
+
+	var diffResult []byte
+	// Have latestTag.
+	if len(latestTag) != 0 {
+		diffResult, err = Exec(fmt.Sprintf("git log --pretty=oneline %s..HEAD", latestTag), true)
+	} else {
+		diffResult, err = Exec("git log --pretty=oneline", true)
+	}
+
+	if err != nil {
+		logrus.Error("Get diff failed.")
+		os.Exit(1)
+		return
+	}
+
+	if len(diffResult) == 0 {
+		logrus.Warn("Diff Result is empty")
+	}
+
+	// Match semver
+	if matched, _ := regexp.Match("BREAKING CHANGE:.*", diffResult); matched {
+		// TODO: Bump major verison up.
+	} else if matched, _ := regexp.Match("feat:.*", diffResult); matched {
+		// TODO: Bump minor version up.
+	} else {
+		// TODO: Bump patch version up.
+	}
+
+	// TODO: Bump build number up.
 
 }
