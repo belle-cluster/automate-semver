@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/flutter-semver/config"
@@ -29,6 +30,8 @@ func main() {
 		return
 	}
 
+	semver := service.NewSemverFromTag(string(latestTag))
+
 	// Get Log
 	logs, err := git.GetLog(string(latestTag), "HEAD")
 	if err != nil {
@@ -38,13 +41,16 @@ func main() {
 
 	// Check if log fall into these condition
 	if matcher.IsMajorChange(logs) {
-		// TODO: Bump Major Version Up
+		semver.BumpMajor()
 	} else if matcher.IsMinorChange(logs) {
-		// TODO: Bump Minor Version Up
+		semver.BumpMinor()
 	} else {
-		// TODO: Bump Patch Version Up
+		semver.BumpPatch()
 	}
-
-	// TODO: Bump build number up
-
+	semver.BumpBuildNumber()
+	os.Setenv(appConfig.EXPORT_ENV_SEMVER_FULL_NAME, semver.Render())
+	os.Setenv(appConfig.EXPORT_ENV_SEMVER_MAJOR_NAME, fmt.Sprint(semver.GetMajor()))
+	os.Setenv(appConfig.EXPORT_ENV_SEMVER_MINOR_NAME, fmt.Sprint(semver.GetMinor()))
+	os.Setenv(appConfig.EXPORT_ENV_SEMVER_PATCH_NAME, fmt.Sprint(semver.GetPatch()))
+	os.Setenv(appConfig.EXPORT_ENV_SEMVER_BUILD_NUMBER_NAME, fmt.Sprint(semver.GetBuildNumber()))
 }
