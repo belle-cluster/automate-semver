@@ -1,76 +1,50 @@
 package main
 
 import (
-	"fmt"
 	"os"
-	"os/exec"
-	"regexp"
 
+	"github.com/flutter-semver/config"
+	"github.com/flutter-semver/service"
 	"github.com/sirupsen/logrus"
 )
 
-func Exec(cmd string, shell bool) ([]byte, error) {
+var appConfig config.Config
 
-	if shell {
-		out, err := exec.Command("bash", "-c", cmd).Output()
-		if err != nil {
-			return out, err
-		}
-		return out, nil
-	} else {
-		out, err := exec.Command(cmd).Output()
-		if err != nil {
-			return out, err
-		}
-		return out, nil
-	}
+func init() {
+	appConfig = config.Load()
 }
 
 func main() {
 	logrus.Info("Start determining the semver of this repo.")
 
+	// Init Service
+	executer := service.NewExecuter()
+	git := service.NewGit(executer)
+	matcher := service.NewMatcher(appConfig.MAJOR_STRING_MATCHER, appConfig.MINOR_STRING_MATCHER)
+
 	// Get the latest tag
-	logrus.Info("Start getting the latest tag.")
-	latestTag, err := Exec("git tag -l --sort=-creatordate | head -n 1", true)
+	latestTag, err := git.GetLatestTag()
 	if err != nil {
-		logrus.Error("Can't get latest tag")
-		os.Exit(1)
-		return
-	}
-	logrus.Debug(latestTag)
-	if len(latestTag) == 0 {
-		logrus.Warn("No latest tag was found.")
-	}
-
-	// Start determining semver.
-
-	var diffResult []byte
-	// Have latestTag.
-	if len(latestTag) != 0 {
-		diffResult, err = Exec(fmt.Sprintf("git log --pretty=oneline %s..HEAD", latestTag), true)
-	} else {
-		diffResult, err = Exec("git log --pretty=oneline", true)
-	}
-
-	if err != nil {
-		logrus.Error("Get diff failed.")
 		os.Exit(1)
 		return
 	}
 
-	if len(diffResult) == 0 {
-		logrus.Warn("Diff Result is empty")
+	// Get Log
+	logs, err := git.GetLog(string(latestTag), "HEAD")
+	if err != nil {
+		os.Exit(1)
+		return
 	}
 
-	// Match semver
-	if matched, _ := regexp.Match("BREAKING CHANGE:.*", diffResult); matched {
-		// TODO: Bump major verison up.
-	} else if matched, _ := regexp.Match("feat:.*", diffResult); matched {
-		// TODO: Bump minor version up.
+	// Check if log fall into these condition
+	if matcher.IsMajorChange(logs) {
+		// TODO: Bump Major Version Up
+	} else if matcher.IsMinorChange(logs) {
+		// TODO: Bump Minor Version Up
 	} else {
-		// TODO: Bump patch version up.
+		// TODO: Bump Patch Version Up
 	}
 
-	// TODO: Bump build number up.
+	// TODO: Bump build number up
 
 }
