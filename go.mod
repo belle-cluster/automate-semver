@@ -1,4 +1,4 @@
-module github.com/semver-getter
+module github.com/flutter-semver
 
 go 1.19
 
