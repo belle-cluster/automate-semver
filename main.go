@@ -13,9 +13,10 @@ var appConfig config.Config
 
 func init() {
 	appConfig = config.Load()
-	logrus.SetLevel(logrus.InfoLevel)
 	if appConfig.Debug {
 		logrus.SetLevel(logrus.DebugLevel)
+	} else {
+		logrus.SetLevel(logrus.InfoLevel)
 	}
 	logrus.SetFormatter(&logrus.TextFormatter{})
 }
