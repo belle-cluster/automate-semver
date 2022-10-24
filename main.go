@@ -12,9 +12,12 @@ import (
 var appConfig config.Config
 
 func init() {
-	logrus.SetLevel(logrus.InfoLevel)
-	logrus.SetFormatter(&logrus.TextFormatter{})
 	appConfig = config.Load()
+	logrus.SetLevel(logrus.InfoLevel)
+	if appConfig.Debug {
+		logrus.SetLevel(logrus.DebugLevel)
+	}
+	logrus.SetFormatter(&logrus.TextFormatter{})
 }
 
 func main() {

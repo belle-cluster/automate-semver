@@ -1,12 +1,16 @@
 package config
 
 import (
+	"os"
+	"strings"
+
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/sirupsen/logrus"
 )
 
 type Config struct {
+	Debug                               bool
 	MAJOR_STRING_MATCHER                []string `envconfig:"MAJOR_STRING_MATCHER" default:"BREAKING CHANGE"`
 	MINOR_STRING_MATCHER                []string `envconfig:"MINOR_STRING_MATCHER" default:"feat"`
 	EXPORT_ENV_SEMVER_FULL_NAME         string   `envconfig:"EXPORT_ENV_SEMVER_FULL_NAME" default:"SEMVER_FULL"`
@@ -19,11 +23,18 @@ type Config struct {
 func Load() Config {
 	var config Config
 
+	debug := os.Getenv("debug")
+
 	err := godotenv.Load("./.env")
 	if err != nil {
 		logrus.Debug("No env file.")
 	}
 
 	envconfig.MustProcess("", &config)
+	config.Debug = false
+	if strings.ToLower(debug) == "true" {
+		config.Debug = true
+	}
+
 	return config
 }
