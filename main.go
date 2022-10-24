@@ -57,4 +57,5 @@ func main() {
 	envManager.SetEnv(appConfig.EXPORT_ENV_SEMVER_MINOR_NAME, fmt.Sprint(semver.GetMinor()))
 	envManager.SetEnv(appConfig.EXPORT_ENV_SEMVER_PATCH_NAME, fmt.Sprint(semver.GetPatch()))
 	envManager.SetEnv(appConfig.EXPORT_ENV_SEMVER_BUILD_NUMBER_NAME, fmt.Sprint(semver.GetBuildNumber()))
+	envManager.WriteToFile()
 }

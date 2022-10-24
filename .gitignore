@@ -16,3 +16,6 @@
 
 # Mac DS_Store file
 *.DS_Store
+
+# Semver Result
+semver-result.txt
