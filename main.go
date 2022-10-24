@@ -51,9 +51,10 @@ func main() {
 	}
 	semver.BumpBuildNumber()
 	logrus.Info("Result: ", semver.Render())
-	os.Setenv(appConfig.EXPORT_ENV_SEMVER_FULL_NAME, semver.Render())
-	os.Setenv(appConfig.EXPORT_ENV_SEMVER_MAJOR_NAME, fmt.Sprint(semver.GetMajor()))
-	os.Setenv(appConfig.EXPORT_ENV_SEMVER_MINOR_NAME, fmt.Sprint(semver.GetMinor()))
-	os.Setenv(appConfig.EXPORT_ENV_SEMVER_PATCH_NAME, fmt.Sprint(semver.GetPatch()))
-	os.Setenv(appConfig.EXPORT_ENV_SEMVER_BUILD_NUMBER_NAME, fmt.Sprint(semver.GetBuildNumber()))
+	envManager := service.NewEnv()
+	envManager.SetEnv(appConfig.EXPORT_ENV_SEMVER_FULL_NAME, semver.Render())
+	envManager.SetEnv(appConfig.EXPORT_ENV_SEMVER_MAJOR_NAME, fmt.Sprint(semver.GetMajor()))
+	envManager.SetEnv(appConfig.EXPORT_ENV_SEMVER_MINOR_NAME, fmt.Sprint(semver.GetMinor()))
+	envManager.SetEnv(appConfig.EXPORT_ENV_SEMVER_PATCH_NAME, fmt.Sprint(semver.GetPatch()))
+	envManager.SetEnv(appConfig.EXPORT_ENV_SEMVER_BUILD_NUMBER_NAME, fmt.Sprint(semver.GetBuildNumber()))
 }
