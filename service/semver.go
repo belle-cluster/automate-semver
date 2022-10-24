@@ -58,21 +58,25 @@ func NewSemverFromTag(tag string) Semver {
 }
 
 func (s *semver) BumpMajor() {
+	logrus.Info("Bumping Major Version up")
 	s.Major++
 	s.Minor = 0
 	s.Patch = 0
 }
 
 func (s *semver) BumpMinor() {
+	logrus.Info("Bumping Minor Version up")
 	s.Minor++
 	s.Patch = 0
 }
 
 func (s *semver) BumpPatch() {
+	logrus.Info("Bumping Patch Version up")
 	s.Patch++
 }
 
 func (s *semver) BumpBuildNumber() {
+	logrus.Info("Bumping BuildNumber Version up")
 	s.BuildNumber++
 }
 

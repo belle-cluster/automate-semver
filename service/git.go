@@ -24,7 +24,7 @@ func NewGit(executer Executer) Git {
 func (g *git) GetLatestTag() ([]byte, error) {
 	logrus.Info("Start getting the latest tag.")
 	latestTag, err := g.executer.Exec("git tag -l --sort=-creatordate | head -n 1", true)
-	logrus.Debug(string(latestTag))
+	logrus.Info("Current Tag: ", string(latestTag))
 	if err != nil {
 		logrus.Error(err)
 	}

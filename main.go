@@ -12,6 +12,8 @@ import (
 var appConfig config.Config
 
 func init() {
+	logrus.SetLevel(logrus.InfoLevel)
+	logrus.SetFormatter(&logrus.TextFormatter{})
 	appConfig = config.Load()
 }
 
@@ -48,6 +50,7 @@ func main() {
 		semver.BumpPatch()
 	}
 	semver.BumpBuildNumber()
+	logrus.Info("Result: ", semver.Render())
 	os.Setenv(appConfig.EXPORT_ENV_SEMVER_FULL_NAME, semver.Render())
 	os.Setenv(appConfig.EXPORT_ENV_SEMVER_MAJOR_NAME, fmt.Sprint(semver.GetMajor()))
 	os.Setenv(appConfig.EXPORT_ENV_SEMVER_MINOR_NAME, fmt.Sprint(semver.GetMinor()))
