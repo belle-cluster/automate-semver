@@ -23,7 +23,7 @@ type Config struct {
 func Load() Config {
 	var config Config
 
-	debug := os.Getenv("debug")
+	debug := os.Getenv("DEBUG")
 
 	err := godotenv.Load("./.env")
 	if err != nil {
