@@ -41,6 +41,7 @@ func (g *git) GetLog(from string, to string) ([]byte, error) {
 	if from == "" {
 		command = fmt.Sprintf("%s %s..%s", command, from, to)
 	}
+	logrus.Debug("Execution command: ", command)
 	log, err := g.executer.Exec(command, true)
 	logrus.Debug(string(log))
 	if err != nil {
