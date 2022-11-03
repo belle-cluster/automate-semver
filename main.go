@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/flutter-semver/config"
 	"github.com/flutter-semver/service"
@@ -39,7 +40,8 @@ func main() {
 	semver := service.NewSemverFromTag(string(latestTag))
 
 	// Get Log
-	logs, err := git.GetLog(string(latestTag), "HEAD")
+	latestTagString := strings.TrimSuffix(string(latestTag), "\n")
+	logs, err := git.GetLog(latestTagString, "HEAD")
 	if err != nil {
 		os.Exit(1)
 		return
