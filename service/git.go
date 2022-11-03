@@ -38,7 +38,7 @@ func (g *git) GetLatestTag() ([]byte, error) {
 
 func (g *git) GetLog(from string, to string) ([]byte, error) {
 	command := "git log --pretty=oneline"
-	if from == "" {
+	if from != "" {
 		command = fmt.Sprintf("%s %s..%s", command, from, to)
 	}
 	logrus.Debug("Execution command: ", command)
