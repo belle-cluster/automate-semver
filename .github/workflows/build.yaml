@@ -51,5 +51,6 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: ${{steps.semver_rel.outputs.new_tag}}
           title: ${{steps.semver_rel.outputs.new_tag}}
+          prerelease: false
           files: |
             **/flutter-semver-*
