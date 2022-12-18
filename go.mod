@@ -1,4 +1,4 @@
-module github.com/flutter-semver
+module github.com/belle-cluster/automate-semver
 
 go 1.19
 

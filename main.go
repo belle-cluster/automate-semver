@@ -5,8 +5,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/flutter-semver/config"
-	"github.com/flutter-semver/service"
+	"github.com/belle-cluster/automate-semver/config"
+	"github.com/belle-cluster/automate-semver/service"
 	"github.com/sirupsen/logrus"
 )
 
